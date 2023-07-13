@@ -2,6 +2,7 @@ var socket = io();
 
 const scoreboard = document.getElementById("scoreboard");
 const currentTurn = document.getElementById("currentTurn");
+const name = document.getElementById("name");
 const board = document.getElementById("board");
 
 const audio = new Howl({
@@ -13,7 +14,6 @@ socket.on("update_scoreboard", function (data) {
   console.log(data);
   scoreboard.replaceChildren(
     ...Object.keys(data).map((name) => {
-      console.log(name);
       const div = document.createElement("div");
       div.innerText = name + ": " + data[name];
       console.log(div);
@@ -23,40 +23,42 @@ socket.on("update_scoreboard", function (data) {
 });
 
 socket.on("current_turn", function (data) {
-  currentTurn.innerText = data;
+  currentTurn.innerText = "Current Turn: " + data;
+});
+
+socket.on("handshake", function (data) {
+  name.innerText = "Your name: " + data;
 });
 
 socket.on("update_board", function (data) {
+  console.log(data);
   if (board.children.length == 0) {
     const cards = [];
     for (var i = 0; i < data.length; i++) {
-      for (var j = 0; j < data[i].length; j++) {
-        const row = i;
-        const column = j;
-        const div = document.createElement("div");
-        div.classList = "card";
-        div.innerHTML = `<div class="card__face card__face--front">front</div>
-        <div class="card__face card__face--back">back</div>`;
-        div.onclick = function () {
-          socket.emit("flip_card", [row, column]);
-        };
-        div.style.top = (i + 1) * 150 - 120 + "px";
-        div.style.left = (j + 1) * 150 + 120 + "px";
-        cards.push(div);
-      }
+      const idx = i;
+      const div = document.createElement("div");
+      div.classList = "card";
+      div.innerHTML = `<div class="card__face card__face--front"></div>
+        <div class="card__face card__face--back"></div>`;
+      div.onclick = () => {
+        socket.emit("flip_card", idx);
+      };
+      cards.push(div);
     }
 
     board.replaceChildren(...cards);
   } else {
-    k = 0;
     for (var i = 0; i < data.length; i++) {
-      for (var j = 0; j < data[i].length; j++) {
-        const row = i;
-        const column = j;
-        board.children[k].classList =
-          data[row][column] == 1 ? "card is-flipped" : "card";
-        k++;
-      }
+      board.children[i].classList =
+        data[i] == 1 || isNaN(data[i]) ? "card is-flipped" : "card";
+      board.children[i].innerHTML = isNaN(data[i])
+        ? `<div class="card__face card__face--front"></div>
+      <div class="card__face card__face--back">` +
+          data[i] +
+          `</div>`
+        : `<div class="card__face card__face--front"></div>
+      <div class="card__face card__face--back">
+            </div>`;
     }
   }
 });

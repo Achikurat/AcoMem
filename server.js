@@ -18,21 +18,22 @@ app.get("/", (req, res) => {
   res.sendFile("/index.html");
 });
 
-const game = new Game(io, 6, 14, 224);
+const game = new Game(io, 20, 10);
 
 io.on("connection", (socket) => {
   const name = getRandomName(Object.values(connectedSockets));
   connectedSockets[socket] = name;
   game.onConnect(name);
 
+  socket.emit("handshake", name);
+
   socket.on("restart", () => {
     game.populateBoard();
     game.nextTurn();
   });
 
-  socket.on("flip_card", (data) => {
-    console.log(data);
-    game.flipCard(name, data[0], data[1]);
+  socket.on("flip_card", (idx) => {
+    game.flipCard(name, idx);
   });
 
   socket.on("disconnect", () => {

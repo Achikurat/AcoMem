@@ -1,36 +1,54 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: #0a101a;
+  color: #e8eef7;
+  font-family: monospace;
 }
 
 #sidebar {
   width: 8vw;
-  height: 100vh;
-  background: lightblue;
+  height: 100%;
+  box-sizing: border-box;
+  background: #8276d0;
+  padding: 5px;
   display: flex;
   flex-direction: column;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .spacer {
   height: 2px;
   width: 100%;
   margin: 20px 0px;
-  background-color: darkcyan;
+  background-color: #e8eef7;
 }
 
 #refresh {
   height: 40px;
-  width: 50%;
-  margin: 20px 25px;
+  width: 4vw;
+  margin: 20px auto;
   cursor: pointer;
-  padding: 6px;
-  background-color: darkcyan;
+  padding: 10px;
+  font-size: 20px;
+  text-align: center;
+  background-color: #9b54c4;
+}
+
+#board {
+  position: absolute;
+  left: 10vw;
+  top: 0;
+  width: 70vw;
+  height: 100%;
 }
 
 .card {
   width: 120px;
   height: 120px;
-  position: absolute;
+  margin: 5px;
+  display: inline-block;
   cursor: pointer;
   transform-style: preserve-3d;
   transform-origin: center right;
@@ -45,19 +63,18 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  line-height: 260px;
-  color: white;
+  color: #e8eef7;
   text-align: center;
   font-weight: bold;
-  font-size: 40px;
+  font-size: 20px;
   backface-visibility: hidden;
 }
 
 .card__face--front {
-  background: crimson;
+  background: #8276d0;
 }
 
 .card__face--back {
-  background: slateblue;
+  background: #9b54c4;
   transform: rotateY(180deg);
 }
