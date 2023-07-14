@@ -4,11 +4,18 @@ const scoreboard = document.getElementById("scoreboard");
 const currentTurn = document.getElementById("currentTurn");
 const name = document.getElementById("name");
 const board = document.getElementById("board");
+const volume = document.getElementById("volume");
 
 const audio = new Howl({
   src: ["audio.mp3"],
+  volume: 0.5,
 });
 var timer;
+
+volume.oninput = function () {
+  console.log(this.value);
+  audio.volume(this.value / 100);
+};
 
 socket.on("update_scoreboard", function (data) {
   console.log(data);
@@ -64,12 +71,11 @@ socket.on("update_board", function (data) {
 });
 
 socket.on("play_audio", function (data) {
-  console.log(data);
-  audio.pause();
+  clearTimeout(timer);
+  audio.stop();
   audio.seek(data[0]);
   audio.play();
-  clearTimeout(timer);
-  timer = setTimeout(() => audio.pause(), data[1] * 1000);
+  timer = setTimeout(() => audio.stop(), data[1] * 1000);
 });
 
 function restartGame() {

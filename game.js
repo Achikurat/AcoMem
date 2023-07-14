@@ -80,6 +80,7 @@ module.exports = class Game {
       this.tempFlipped.length < 2 &&
       !this.isFlipped(idx)
     ) {
+      this.io.emit("play_audio", [this.board[idx], this.grainLength]);
       clearTimeout(this.timer);
       if (this.tempFlipped.length === 0) {
         this.tempFlipped.push(idx);
@@ -94,8 +95,6 @@ module.exports = class Game {
           this.emitBoard();
         }, Math.max(2000, this.grainLength * 1000));
       }
-
-      this.io.emit("play_audio", [this.board[idx], this.grainLength]);
     }
   }
 
